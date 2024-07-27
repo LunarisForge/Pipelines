@@ -1,0 +1,37 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['8.3']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+
+      - name: Run PHPUnit
+        run: |
+          vendor/bin/phpunit --configuration phpunit.xml --coverage-text --coverage-clover=build/logs/clover-${{ matrix.php-versions }}.xml || true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report-${{ matrix.php-versions }}
+          path: build/logs/clover-${{ matrix.php-versions }}.xml
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse -c phpstan.neon
