@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Pipelines;
+namespace Pipelines;
 
 use LunarisForge\Http\Request;
 use LunarisForge\Http\Response;

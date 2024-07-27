@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Pipeline\Stages;
+namespace Pipeline\Stages;
 
 use LunarisForge\Http\Enums\HttpStatus;
 use LunarisForge\Http\Request;
